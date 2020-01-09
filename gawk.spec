@@ -1,7 +1,7 @@
 Summary: The GNU version of the awk text processing utility
 Name: gawk
 Version: 3.1.7
-Release: 6%{?dist}
+Release: 9%{?dist}
 License: GPLv3+
 Group: Applications/Text
 URL: http://www.gnu.org/software/gawk/gawk.html
@@ -9,6 +9,11 @@ Source0: http://ftp.gnu.org/gnu/gawk/gawk-%{version}.tar.xz
 Patch0: gawk-3.1.7-prec-utf8.patch
 Patch1: gawk-3.1.7-max-int.patch
 Patch2: gawk-3.1.7-syntax.patch
+Patch3: gawk-3.1.7-double-free-wstptr.patch
+# Needed until #743343 is fixed in byacc (Requires: byacc-fixed-version):
+Patch4: gawk-3.1.7-byacc-overflow.patch
+Patch5: gawk-3.1.7-preserve-argv.patch
+Patch6: gawk-3.1.7-signed-overflow-warning.patch
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 Requires(post): /sbin/install-info
@@ -28,6 +33,10 @@ considered to be a standard Linux tool for processing text.
 %patch0 -p1 -b .prec-utf8
 %patch1 -p1 -b .max-int
 %patch2 -p1 -b .syntax
+%patch3 -p1 -b .double-free-wstptr
+%patch4 -p1 -b .byacc-overflow
+%patch5 -p1 -b .preserve-argv
+%patch6 -p1 -b .signed-overflow-warning
 
 %build
 # this is due to building issue on ppc - probably bogus compiler
@@ -80,6 +89,15 @@ fi
 %{_datadir}/awk
 
 %changelog
+* Tue Feb 13 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 3.1.7-9
+- Fix gcc signed overflow warning
+
+* Mon Feb 13 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 3.1.7-7
+- Fix double free in free_wstr (#648906)
+- Prevent overflows by increasing YYMAXDEPTH and YYSTACKSIZE
+  byacc/bison parameters (#743343)
+- Preserve argv by copying the strings (#740673)
+
 * Mon Jul 12 2010 Jan Zeleny <jzeleny@redhat.com> - 3.1.7-6
 - fixed CFLAGS in spec file on ppc (#613678)
 
