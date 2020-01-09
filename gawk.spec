@@ -1,7 +1,7 @@
 Summary: The GNU version of the awk text processing utility
 Name: gawk
 Version: 3.1.7
-Release: 10%{?dist}
+Release: 10%{?dist}.3
 License: GPLv3+
 Group: Applications/Text
 URL: http://www.gnu.org/software/gawk/gawk.html
@@ -15,11 +15,12 @@ Patch4: gawk-3.1.7-byacc-overflow.patch
 Patch5: gawk-3.1.7-preserve-argv.patch
 Patch6: gawk-3.1.7-signed-overflow-warning.patch
 Patch7: gawk-3.1.7-mbgsub.patch
+Patch8: gawk-3.1.7-expand-ranges-before-regexp-compilation-bz1250830.patch
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
-BuildRequires: byacc
+BuildRequires: byacc texinfo
 
 %description
 The gawk package contains the GNU version of awk, a text processing
@@ -39,6 +40,11 @@ considered to be a standard Linux tool for processing text.
 %patch5 -p1 -b .preserve-argv
 %patch6 -p1 -b .signed-overflow-warning
 %patch7 -p0 -b .mbgsub
+%patch8 -p1 -b .expand-ranges-before-regexp-compilation-bz1250830
+
+# This is a workaround to prevent running of automake, which is not available in the build root:
+# (needed for: gawk-3.1.7-expand-ranges-before-regexp-compilation-bz1250830.patch)
+touch test/Makefile.in
 
 %build
 # this is due to building issue on ppc - probably bogus compiler
@@ -91,6 +97,16 @@ fi
 %{_datadir}/awk
 
 %changelog
+* Mon Oct 26 2015 David Kaspar [Dee'Kej] <dkaspar@redhat.com> - 3.1.7-10.el6_7.3
+- Added 'texinfo' to BuildRequires so the info pages are correctly updated
+
+* Mon Oct 26 2015 David Kaspar [Dee'Kej] <dkaspar@redhat.com> - 3.1.7-10.el6_7.2
+- Man & info pages fixed to describe the '--posix' usage correctly,
+  as discussed in #1271443 (comments #1 and #2)
+
+* Tue Sep 29 2015 David Kaspar [Dee'Kej] <dkaspar@redhat.com> - 3.1.7-10.el6_7.1
+- Expand ranges before regexp compilation (#1271701)
+
 * Wed Jul  4 2012 Martin Bříza <mbriza@redhat.com> - 3.1.7-10
 - fix incorrect match in multi-byte (non-UTF8) string (#829558)
 
