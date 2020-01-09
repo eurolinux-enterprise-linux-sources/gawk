@@ -1,7 +1,7 @@
 Summary: The GNU version of the awk text processing utility
 Name: gawk
 Version: 3.1.7
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: GPLv3+
 Group: Applications/Text
 URL: http://www.gnu.org/software/gawk/gawk.html
@@ -14,6 +14,7 @@ Patch3: gawk-3.1.7-double-free-wstptr.patch
 Patch4: gawk-3.1.7-byacc-overflow.patch
 Patch5: gawk-3.1.7-preserve-argv.patch
 Patch6: gawk-3.1.7-signed-overflow-warning.patch
+Patch7: gawk-3.1.7-mbgsub.patch
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 Requires(post): /sbin/install-info
@@ -37,6 +38,7 @@ considered to be a standard Linux tool for processing text.
 %patch4 -p1 -b .byacc-overflow
 %patch5 -p1 -b .preserve-argv
 %patch6 -p1 -b .signed-overflow-warning
+%patch7 -p0 -b .mbgsub
 
 %build
 # this is due to building issue on ppc - probably bogus compiler
@@ -89,6 +91,9 @@ fi
 %{_datadir}/awk
 
 %changelog
+* Wed Jul  4 2012 Martin Bříza <mbriza@redhat.com> - 3.1.7-10
+- fix incorrect match in multi-byte (non-UTF8) string (#829558)
+
 * Tue Feb 13 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 3.1.7-9
 - Fix gcc signed overflow warning
 
