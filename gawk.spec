@@ -1,7 +1,7 @@
 Summary: The GNU version of the awk text processing utility
 Name: gawk
 Version: 4.0.2
-Release: 4%{?dist}
+Release: 4%{?dist}.1
 # Most of source files are licensed under GPLv3+,
 # several files are GPL or LGPLv2.1+ licensed,
 # gettext.h is LGPL and random.c is BSD licensed
@@ -16,6 +16,8 @@ Provides: /bin/awk
 Provides: /bin/gawk
 BuildRequires: byacc
 
+Patch1:   gawk-4.0.2-fix-chksize-calls.patch
+
 %description
 The gawk package contains the GNU version of awk, a text processing
 utility. Awk interprets a special-purpose programming language to do
@@ -26,6 +28,7 @@ considered to be a standard Linux tool for processing text.
 
 %prep
 %setup -q
+%patch1 -p1
 
 %build
 %configure --with-libsigsegv-prefix=no
@@ -71,6 +74,9 @@ fi
 %{_datadir}/awk
 
 %changelog
+* Tue Jun 13 2017 David Kaspar [Dee'Kej] <dkaspar@redhat.com> - 4.0.2-4.el7_3.1
+- Fix calls to chksize to avoid gawk being killed by SIGABRT (bug #1441689)
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 4.0.2-4
 - Mass rebuild 2014-01-24
 

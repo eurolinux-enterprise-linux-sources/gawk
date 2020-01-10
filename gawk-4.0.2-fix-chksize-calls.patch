@@ -1,0 +1,25 @@
+From cf5e462296d01d58a212badd3d28c3c348f4f917 Mon Sep 17 00:00:00 2001
+From: "Arnold D. Robbins" <arnold@skeeve.com>
+Date: Tue, 2 Jul 2013 22:03:50 +0300
+Subject: [PATCH] Bug fix in profile.c:pp_string for valgrind.
+
+---
+ profile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/profile.c b/profile.c
+index eb78837..16b1469 100644
+--- a/profile.c
++++ b/profile.c
+@@ -1201,7 +1201,7 @@ pp_string(const char *in_str, size_t len, int delim)
+ 			obufout += len;
+ 		}
+ 	}
+-	chksize(1);
++	chksize(2);
+ 	*obufout++ = delim;
+ 	*obufout = '\0';
+ 	return obuf;
+-- 
+2.9.4
+
